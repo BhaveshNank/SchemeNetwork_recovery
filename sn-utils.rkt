@@ -1,0 +1,38 @@
+;; Done
+
+(module sn-utils racket
+
+  (provide sn-dict-ks-vs
+           sn-line->entry
+           sn-list->dict
+           )
+  
+  
+
+ 
+  ;; utils
+  ;; [k] [v] -> [(k,v)]
+  ;; Easy
+  (define (sn-dict-ks-vs ks vs) ; function takes two lists of equal length an returns list of cons cells
+    (map cons ks vs)) ; creates new list 
+
+  
+  ;; Medium
+  ;; str -> (a,[a])
+  (define (sn-line->entry ln) ; takes string ln
+    (let ((lst (map string->symbol (string-split ln)))) ;splits it into list of strings and convert into symbol
+      ;; creates cons pair with the first element of the lst as the car and rest of lst as cdr
+      (cons (car lst) (cdr lst))))
+  ;(sn-line->entry "A B C D")
+  
+
+  ;; [(a,b)] -> [(a,b)] 
+  ;; Easy
+  (define (sn-list->dict es) ;; takes list of key-value pairs 
+    ;; creates a dictionary where keys and values are mapped from a list of pairs
+    (map cons (map car es) (map cdr es)))
+
+  
+  )
+
+

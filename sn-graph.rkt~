@@ -1,0 +1,63 @@
+(module sn-graph racket
+  
+  (require racket/dict)
+  
+  (provide sn-consistent
+           sn-empty
+           sn-add-user
+           sn-users
+           sn-add-frndshp)
+           
+
+  ;; required libraries. (imported above)
+  ;(require racket/dict)
+  ;;(require racket/set)
+
+  
+  ; Hard
+  (define (sn-consistent p) #t)
+  
+  (require racket/dict)
+  ;; graph
+  ;; -> [a]
+  ;; Easy (+0.5)
+  (define sn-empty
+    empty)
+
+
+  ;; Easy
+  ;; [(k,v)] -> [u]
+  (define (sn-users graph)
+    (dict-keys  graph))
+  
+ 
+  ;(/ 1 0))
+
+  
+  ;; Hard
+  ;; [(k,v)] u -> [(k,v)] | (u,{})
+  (define (sn-add-user graph user)
+    (if (dict-ref graph user #f)
+      graph  ; user already exists, return network unchanged
+      (dict-set graph user '()))) ; user doesn't exist, add new entry to the network
+    ;(/ 1 0))
+
+  ;; Hard
+  ;; [(k,v)]|(u1,f1)|(u2,f2) ->
+  ;;  [(k,v)] | (u1,f1+{f2}) | (u2,f2+{f1})
+  (define (sn-add-frndshp graph u1 u2)
+  (define (add-friend lst new-friend)
+    (if (member new-friend lst)
+        lst
+        (cons new-friend lst)))
+  (if (and (dict-ref graph u1 #f) (dict-ref graph u2 #f))
+      (dict-set graph u1 (add-friend (dict-ref graph u1 '()) u2))
+      graph)
+  (if (and (dict-ref graph u1 #f) (dict-ref graph u2 #f))
+      (dict-set graph u2 (add-friend (dict-ref graph u2 '()) u1))
+      graph))
+    
+    
+
+
+  )

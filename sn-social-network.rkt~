@@ -1,0 +1,103 @@
+(module sn-social-network racket
+
+  (provide 
+   sn-ff-for
+   sn-cmn-frnds-btwn
+   sn-cmn-frnds
+   sn-frnd-cnt
+   sn-frndlst-user
+   sn-unfrndlst-user  )
+
+  (require rackunit)
+  (require racket/math)
+
+
+  (require "sn-graph.rkt")
+  (require "sn-utils.rkt")
+  (require srfi/1)
+
+  (require racket/dict)
+  ;(require data/dict)
+
+  
+  ;; social-network.
+  ;; Easy
+  ;; [(k,v)]| (u,vu) -> vu
+  (define (sn-ff-for graph u1)
+    (dict-ref graph u1 '()))
+    ;(/ 1 0))
+
+
+  ;; Medium
+  ;; [(k,v)]|(u1,f1)|(u2,f2) ->
+  ;; f2 & f3
+  (define (my-intersect lst1 lst2)
+  (filter (lambda (x) (member x lst2)) lst1))
+
+(define (sn-cmn-frnds-btwn graph u1 u2)
+  (let* ([ff1 (sn-ff-for graph u1)] ; get u1's common friends
+         [ff2 (sn-ff-for graph u2)] ; get u2's common friends
+         [ffs (my-intersect ff1 ff2)]) ; get intersection of u1's and u2's common friends
+    (remove-duplicates ffs))) ; remove duplicates and return the list
+    
+
+  
+  ;; Hard
+  (define (sn-frnd-cnt graph)
+  (define (count-friends user)
+    (cons user (length (sn-ff-for graph user))))
+  (map count-friends (sn-users graph)))
+
+ 
+    ;( / 1 0))
+
+  ;; pre: length > 0
+  
+  (define (sn-frndlst-user graph)
+  (let* ([friend-counts (sn-frnd-cnt graph)]
+         [max-friends (apply max (map cdr friend-counts))]
+         [max-friends-users (map car (filter (lambda (x) (= (cdr x) max-friends)) friend-counts))])
+    (cons (car max-friends-users) max-friends)))
+
+
+
+    ;(/ 1 0))
+              
+          
+  ;; pre: length > 0
+
+(define (sn-unfrndlst-user graph)
+  (define min-friends (apply min (map cdr (sn-frnd-cnt graph))))
+  (let ((unfriends (filter (lambda (x) (= (cdr x) min-friends)) (sn-frnd-cnt graph))))
+    (cons (caar unfriends) min-friends)))
+
+
+
+    ;(/ 1 0))
+
+  ;; this is for free. Do not mdify (ROM)
+  (define (sn-cmn-frnds-ff2 graph u)
+    (let*
+        ([keys (sn-users graph)]
+         [vals (map
+                (lambda (key)
+                  (sn-cmn-frnds-btwn graph u key))
+                keys)]
+       
+         )
+      (sn-dict-ks-vs keys vals)))
+
+
+  ;; this is for free. Do not mdify (ROM)
+  (define (sn-cmn-frnds graph )
+    (let*
+        ([keys (sn-users graph)]
+         [vals (map
+                (lambda (key)
+                  (sn-cmn-frnds-ff2 graph key))
+                keys)]
+         )
+      (sn-dict-ks-vs keys vals)))
+
+  )
+
